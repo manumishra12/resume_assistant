@@ -12,7 +12,7 @@ import tempfile
 
 # Configuration
 GOOGLE_API_KEY = "AIzaSyBFni23FxQZIKsdP2bMLrJrMuP_YwQy3M4"
-RESUME_PATH = "C:\Users\conne\Desktop\resume_bot\Resume_ManuMishra.pdf"
+RESUME_PATH = "Resume_ManuMishra.pdf"
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx'}
 
