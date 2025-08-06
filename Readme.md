@@ -10,7 +10,12 @@ AI-powered tool for analyzing resumes and answering common interview questions.
 
 ### 1. Predefined Q\&A
 
-Provides instant, intelligent answers to five common interview questions using keyword matching.
+Provides instant, intelligent answers to five common interview questions using keyword matching.:
+ - What should we know about your life story in a few sentences?
+ - What’s your #1 superpower?
+ - What are the top 3 areas you’d like to grow in?
+ - What misconception do your coworkers have about you?
+ - How do you push your boundaries and limits?
 
 ### 2. Default Resume Analysis
 
