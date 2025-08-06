@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Assistant - Professional Interview Bot</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background: #f8fafc;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+        
+        /* Left Panel - Resume */
+        .left-panel {
+            width: 50%;
+            background: white;
+            border-right: 2px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .panel-header {
+            background: linear-gradient(135deg, #091c46 0%, #240e47 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(37, 99, 235, 0.1);
+        }
+        
+        .panel-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        
+        .panel-subtitle {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            text-align: center;
+        }
+        
+        .resume-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            line-height: 1.7;
+            font-size: 0.875rem;
+        }
+        
+        .resume-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .resume-content::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        .resume-content::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        
+        .resume-content::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        .resume-section {
+            margin-bottom: 2rem;
+        }
+        
+        .resume-section h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0e2964;
+            margin-bottom: 0.5rem;
+            border-bottom: 3px solid #0e234e;
+            padding-bottom: 0.5rem;
+        }
+        
+        .resume-section h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #003ab8;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+        
+        .resume-section h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #374151;
+            margin: 1rem 0 0.5rem 0;
+        }
+        
+        .resume-section p {
+            color: #4b5563;
+            margin-bottom: 0.75rem;
+        }
+        
+        .contact-info {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin: 0.5rem 0;
+            font-size: 0.875rem;
+        }
+        
+        .contact-item i {
+            margin-right: 0.75rem;
+            color: #0c1d41;
+            width: 16px;
+        }
+        
+        /* Right Panel - Chat */
+        .right-panel {
+            width: 50%;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            padding-bottom: 120px;
+        }
+        
+        .chat-area::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .chat-area::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        .chat-area::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        
+        .message-group {
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, #081c47 0%, #180757 100%);
+            color: white;
+            padding: 1rem 1.25rem;
+            border-radius: 20px 20px 6px 20px;
+            max-width: 80%;
+            margin-left: auto;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+            word-wrap: break-word;
+            margin-bottom: 0.5rem;
+        }
+        
+        .bot-message {
+            background: white;
+            color: #1e293b;
+            padding: 1rem 1.25rem;
+            border-radius: 20px 20px 20px 6px;
+            max-width: 85%;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            word-wrap: break-word;
+            margin-bottom: 0.5rem;
+        }
+        
+        .message-meta {
+            font-size: 0.75rem;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .user-meta {
+            justify-content: flex-end;
+            color: #94a3b8;
+        }
+        
+        .source-badge {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: #475569;
+            padding: 0.125rem 0.625rem;
+            border-radius: 12px;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1px solid #d1d5db;
+        }
+        
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            color: #64748b;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #cbd5e1;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        
+        .empty-state p {
+            font-size: 0.875rem;
+        }
+        
+        /* Input Area */
+        .input-area {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 1.5rem;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .input-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 0.75rem;
+            position: relative;
+        }
+        
+        .voice-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            font-size: 1.25rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .voice-btn:hover {
+            border-color: #0f224d;
+            color: #132753;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+        }
+        
+        .voice-btn.active {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border-color: #ef4444;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        
+        .input-field {
+            flex: 1;
+            min-height: 50px;
+            max-height: 120px;
+            padding: 1rem 1.25rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            resize: none;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+            line-height: 1.5;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #0a2153;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .send-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #091c46 0%, #240e47 100%);
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            font-size: 1.25rem;
+            box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+        }
+        
+        .send-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+        }
+        
+        .send-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 2px 5px rgba(156, 163, 175, 0.2);
+        }
+        
+        .listening-indicator {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ef4444;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+            animation: slideUp 0.3s ease-out;
+            white-space: nowrap;
+            display: none;
+        }
+        
+        .upload-section {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .upload-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .upload-area {
+            flex: 1;
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+        
+        .upload-area:hover {
+            border-color: #13295a;
+            background: #f0f9ff;
+        }
+        
+        .upload-area.dragover {
+            border-color: #122857;
+            background: #eff6ff;
+            transform: scale(1.02);
+        }
+        
+        .upload-text {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .upload-text i {
+            font-size: 1.5rem;
+            color: #9ca3af;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .upload-btn {
+            background: linear-gradient(135deg, #082053 0%, #310f66 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .upload-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        
+        .upload-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .file-info {
+            background: #f0f9ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-top: 0.75rem;
+            font-size: 0.8125rem;
+            color: #1e40af;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .file-info i {
+            margin-right: 0.5rem;
+        }
+        
+        .remove-file {
+            background: none;
+            border: none;
+            color: #dc2626;
+            cursor: pointer;
+            font-size: 0.875rem;
+            padding: 0.25rem;
+        }
+        
+        .remove-file:hover {
+            color: #991b1b;
+        }
+        
+        .resume-content.uploaded {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-left: 4px solid #0a2050;
+        }
+        
+        .resume-uploaded-badge {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .resume-uploaded-badge i {
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+        
+        .resume-content.uploaded .resume-section {
+            background: white;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }
+        
+        .resume-content.uploaded .resume-section h1 {
+            color: #103775;
+            border-bottom: 3px solid #0c204b;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .resume-content.uploaded .resume-section h2 {
+            color: #2563eb;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0 0 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .resume-content.uploaded .resume-section h2 i {
+            background: #eff6ff;
+            color: #2563eb;
+            padding: 0.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .resume-content.uploaded .resume-section h3 {
+            color: #374151;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin: 1.25rem 0 0.5rem 0;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        
+        .resume-content.uploaded .resume-section p {
+            color: #4b5563;
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+        }
+        
+        .resume-content.uploaded .resume-section p strong {
+            color: #1e293b;
+            font-weight: 600;
+        }
+        
+        .resume-content.uploaded .contact-info {
+            background: #f8fafc;
+            padding: 1.25rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border: 2px solid #e2e8f0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 0.75rem;
+        }
+        
+        .resume-content.uploaded .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            font-size: 0.875rem;
+        }
+        
+        .resume-content.uploaded .contact-item i {
+            margin-right: 0.75rem;
+            color: #2563eb;
+            width: 20px;
+            font-size: 0.875rem;
+            background: #eff6ff;
+            padding: 0.5rem;
+            border-radius: 6px;
+        }
+        
+        .resume-actions {
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .resume-switch-btn {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .resume-switch-btn:hover {
+            background: #374151;
+            transform: translateY(-1px);
+        }
+        
+        .resume-status {
+            font-size: 0.75rem;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        
+        .loading-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+        
+        .loading-indicator i {
+            margin-right: 0.5rem;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+            font-size: 0.875rem;
+            border-left: 4px solid #dc2626;
+        }
+        
+        .status-message {
+            background: #f0f9ff;
+            color: #0369a1;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+            font-size: 0.875rem;
+            border-left: 4px solid #0369a1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Panel - Resume Content -->
+        <div class="left-panel">
+            <div class="panel-header">
+                <h1 class="panel-title"><i class="fas fa-file-alt"></i> Resume</h1>
+                <p class="panel-subtitle">Professional Background & Experience</p>
+            </div>
+            
+            <!-- Resume Actions -->
+            <div class="resume-actions" id="resumeActions">
+                <div class="resume-status">
+                    <i class="fas fa-file-alt"></i>
+                    <span id="resumeStatusText">Viewing: Default Resume (Manu Mishra)</span>
+                </div>
+                <button class="resume-switch-btn" id="resetResumeBtn" style="display: none;">
+                    <i class="fas fa-undo"></i>
+                    Reset to Default
+                </button>
+            </div>
+            
+            <div class="resume-content" id="resumeContent">
+                <!-- Resume content will be loaded dynamically -->
+            </div>
+        </div>
+
+        <!-- Right Panel - Chat Interface -->
+        <div class="right-panel">
+            <div class="panel-header">
+                <h1 class="panel-title"><i class="fas fa-robot"></i> Voice Assistant</h1>
+                <p class="panel-subtitle">Ask questions about resume content</p>
+            </div>
+            
+            <!-- Resume Upload Section -->
+            <div class="upload-section">
+                <div class="upload-container">
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="resumeFile" class="file-input" accept=".pdf,.doc,.docx">
+                        <div class="upload-text">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <strong>Click or drag to upload resume</strong><br>
+                            Supports PDF, DOC, DOCX files
+                        </div>
+                    </div>
+                    <button class="upload-btn" id="uploadBtn" disabled>
+                        <i class="fas fa-upload"></i>
+                        Upload Resume
+                    </button>
+                </div>
+                <div class="file-info" id="fileInfo" style="display: none;">
+                    <span><i class="fas fa-file"></i><span id="fileName"></span></span>
+                    <button class="remove-file" id="removeFile">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="current-resume" id="currentResumeStatus">
+                    <div><br></div>
+                    <i class="fas fa-check-circle" style="color: #059669;"> </i>
+                    <span> Currently using: Manu Mishra's Resume (Default)</span>
+                </div>
+            </div>
+            
+            <div class="chat-area" id="chatArea">
+                <div class="empty-state">
+                    <i class="fas fa-comments"></i>
+                    <h3>Start a Conversation</h3>
+                    <p>Ask me anything about my professional experience, skills, or projects</p>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <div class="listening-indicator" id="listeningIndicator">
+                    <i class="fas fa-microphone"></i> Listening... Speak now
+                </div>
+                <div class="input-container">
+                    <button class="voice-btn" id="voiceBtn" title="Toggle voice input">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <textarea 
+                        class="input-field" 
+                        id="messageInput" 
+                        placeholder="Type your question here..." 
+                        rows="1"
+                    ></textarea>
+                    <button class="send-btn" id="sendBtn" title="Send message" disabled>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class VoiceAssistant {
+            constructor() {
+                this.isVoiceMode = false;
+                this.isListening = false;
+                this.recognition = null;
+                this.synthesis = window.speechSynthesis;
+                this.conversationHistory = [];
+                
+                this.initElements();
+                this.initEventListeners();
+                this.initSpeechRecognition();
+                this.loadResumeContent();
+            }
+            
+            initElements() {
+                this.voiceBtn = document.getElementById('voiceBtn');
+                this.messageInput = document.getElementById('messageInput');
+                this.sendBtn = document.getElementById('sendBtn');
+                this.chatArea = document.getElementById('chatArea');
+                this.listeningIndicator = document.getElementById('listeningIndicator');
+                this.resumeContent = document.getElementById('resumeContent');
+                
+                // Upload elements
+                this.uploadArea = document.getElementById('uploadArea');
+                this.resumeFile = document.getElementById('resumeFile');
+                this.uploadBtn = document.getElementById('uploadBtn');
+                this.fileInfo = document.getElementById('fileInfo');
+                this.fileName = document.getElementById('fileName');
+                this.removeFile = document.getElementById('removeFile');
+                
+                // Resume action elements
+                this.resumeStatusText = document.getElementById('resumeStatusText');
+                this.resetResumeBtn = document.getElementById('resetResumeBtn');
+                
+                this.selectedFile = null;
+                this.currentResume = 'default';
+                
+                // Load default resume content
+                this.loadDefaultResumeContent();
+            }
+            
+            initEventListeners() {
+                this.voiceBtn.addEventListener('click', () => this.toggleVoiceMode());
+                this.sendBtn.addEventListener('click', () => this.sendMessage());
+                this.messageInput.addEventListener('input', () => this.updateSendButton());
+                this.messageInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+                
+                // Upload event listeners
+                this.uploadArea.addEventListener('click', () => this.resumeFile.click());
+                this.resumeFile.addEventListener('change', (e) => this.handleFileSelect(e));
+                this.uploadBtn.addEventListener('click', () => this.uploadResume());
+                this.removeFile.addEventListener('click', () => this.removeSelectedFile());
+                
+                // Resume action listeners
+                this.resetResumeBtn.addEventListener('click', () => this.resetToDefaultResume());
+                
+                // Drag and drop
+                this.uploadArea.addEventListener('dragover', (e) => this.handleDragOver(e));
+                this.uploadArea.addEventListener('dragleave', (e) => this.handleDragLeave(e));
+                this.uploadArea.addEventListener('drop', (e) => this.handleDrop(e));
+                
+                // Auto-resize textarea
+                this.messageInput.addEventListener('input', () => {
+                    this.messageInput.style.height = 'auto';
+                    this.messageInput.style.height = Math.min(this.messageInput.scrollHeight, 120) + 'px';
+                });
+            }
+            
+            initSpeechRecognition() {
+                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    this.recognition = new SpeechRecognition();
+                    this.recognition.continuous = false;
+                    this.recognition.interimResults = false;
+                    this.recognition.lang = 'en-US';
+                    
+                    this.recognition.onstart = () => {
+                        this.isListening = true;
+                        this.listeningIndicator.classList.add('show');
+                    };
+                    
+                    this.recognition.onresult = (event) => {
+                        const transcript = event.results[0][0].transcript;
+                        this.messageInput.value = transcript;
+                        this.updateSendButton();
+                        this.sendMessage();
+                    };
+                    
+                    this.recognition.onerror = (event) => {
+                        this.showError('Speech recognition error: ' + event.error);
+                        this.stopListening();
+                    };
+                    
+                    this.recognition.onend = () => {
+                        this.stopListening();
+                    };
+                } else {
+                    console.warn('Speech recognition not supported');
+                }
+            }
+            
+            toggleVoiceMode() {
+                this.isVoiceMode = !this.isVoiceMode;
+                
+                if (this.isVoiceMode) {
+                    this.voiceBtn.classList.add('active');
+                    this.voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                    this.startListening();
+                } else {
+                    this.voiceBtn.classList.remove('active');
+                    this.voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                    this.stopListening();
+                }
+            }
+            
+            startListening() {
+                if (this.recognition && !this.isListening) {
+                    this.recognition.start();
+                }
+            }
+            
+            stopListening() {
+                this.isListening = false;
+                this.isVoiceMode = false;
+                this.voiceBtn.classList.remove('active');
+                this.listeningIndicator.classList.remove('show');
+                if (this.recognition) {
+                    this.recognition.stop();
+                }
+            }
+            
+            updateSendButton() {
+                const hasText = this.messageInput.value.trim().length > 0;
+                this.sendBtn.disabled = !hasText;
+            }
+            
+            async sendMessage() {
+                const message = this.messageInput.value.trim();
+                if (!message) return;
+                
+                // Add user message to chat
+                this.addMessage('user', message);
+                this.messageInput.value = '';
+                this.updateSendButton();
+                this.messageInput.style.height = '50px';
+                
+                // Show loading
+                this.showLoading();
+                
+                try {
+                    // Send to backend
+                    const response = await this.sendToBackend(message);
+                    this.hideLoading();
+                    
+                    // Add bot response
+                    this.addMessage('bot', response.answer, response.source);
+                    
+                    // Text-to-speech
+                    this.speak(response.answer);
+                    
+                } catch (error) {
+                    this.hideLoading();
+                    this.showError('Failed to get response. Please try again.');
+                    console.error('Error:', error);
+                }
+            }
+            
+            addMessage(type, content, source = null) {
+                const messageGroup = document.createElement('div');
+                messageGroup.className = 'message-group';
+                
+                const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                if (type === 'user') {
+                    messageGroup.innerHTML = `
+                        <div class="user-message">${content}</div>
+                        <div class="message-meta user-meta">${timestamp}</div>
+                    `;
+                } else {
+                    const sourceBadge = source ? `<span class="source-badge">${source}</span>` : '';
+                    messageGroup.innerHTML = `
+                        <div class="bot-message">${content}</div>
+                        <div class="message-meta">
+                            ${sourceBadge}
+                            <span>${timestamp}</span>
+                        </div>
+                    `;
+                }
+                
+                // Remove empty state if it exists
+                const emptyState = this.chatArea.querySelector('.empty-state');
+                if (emptyState) {
+                    emptyState.remove();
+                }
+                
+                this.chatArea.appendChild(messageGroup);
+                this.chatArea.scrollTop = this.chatArea.scrollHeight;
+            }
+            
+            showLoading() {
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = 'loading-indicator';
+                loadingDiv.id = 'loadingIndicator';
+                loadingDiv.innerHTML = '<i class="fas fa-spinner"></i> Thinking...';
+                this.chatArea.appendChild(loadingDiv);
+                this.chatArea.scrollTop = this.chatArea.scrollHeight;
+            }
+            
+            hideLoading() {
+                const loading = document.getElementById('loadingIndicator');
+                if (loading) {
+                    loading.remove();
+                }
+            }
+            
+            showError(message) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+                this.chatArea.appendChild(errorDiv);
+                this.chatArea.scrollTop = this.chatArea.scrollHeight;
+                
+                // Remove after 5 seconds
+                setTimeout(() => errorDiv.remove(), 5000);
+            }
+            
+            speak(text) {
+                if (this.synthesis) {
+                    // Cancel any ongoing speech
+                    this.synthesis.cancel();
+                    
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.rate = 0.9;
+                    utterance.pitch = 1;
+                    utterance.volume = 0.8;
+                    
+                    // Try to use a more natural voice
+                    const voices = this.synthesis.getVoices();
+                    const preferredVoice = voices.find(voice => 
+                        voice.name.includes('Google') || 
+                        voice.name.includes('Microsoft') ||
+                        voice.lang.includes('en-US')
+                    );
+                    if (preferredVoice) {
+                        utterance.voice = preferredVoice;
+                    }
+                    
+                    this.synthesis.speak(utterance);
+                }
+            }
+            
+            async sendToBackend(message) {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        message: message,
+                        resume_type: this.currentResume
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                return await response.json();
+            }
+            
+            async loadResumeContent() {
+                // Load default resume content
+                console.log('Resume content loaded');
+            }
+            
+            handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    this.selectFile(file);
+                }
+            }
+            
+            handleDragOver(event) {
+                event.preventDefault();
+                this.uploadArea.classList.add('dragover');
+            }
+            
+            handleDragLeave(event) {
+                event.preventDefault();
+                this.uploadArea.classList.remove('dragover');
+            }
+            
+            handleDrop(event) {
+                event.preventDefault();
+                this.uploadArea.classList.remove('dragover');
+                const files = event.dataTransfer.files;
+                if (files.length > 0) {
+                    this.selectFile(files[0]);
+                }
+            }
+            
+            selectFile(file) {
+                // Validate file type
+                const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                if (!allowedTypes.includes(file.type)) {
+                    this.showError('Please select a PDF, DOC, or DOCX file.');
+                    return;
+                }
+                
+                // Validate file size (max 10MB)
+                if (file.size > 10 * 1024 * 1024) {
+                    this.showError('File size must be less than 10MB.');
+                    return;
+                }
+                
+                this.selectedFile = file;
+                this.fileName.textContent = file.name;
+                this.fileInfo.style.display = 'flex';
+                this.uploadBtn.disabled = false;
+            }
+            
+            removeSelectedFile() {
+                this.selectedFile = null;
+                this.resumeFile.value = '';
+                this.fileInfo.style.display = 'none';
+                this.uploadBtn.disabled = true;
+            }
+            
+            async uploadResume() {
+                if (!this.selectedFile) return;
+                
+                const formData = new FormData();
+                formData.append('resume', this.selectedFile);
+                
+                this.uploadBtn.disabled = true;
+                this.uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+                
+                try {
+                    const response = await fetch('/api/upload-resume', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Upload failed');
+                    }
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // Update resume display in left panel
+                        this.updateResumeContent(result.content, this.selectedFile.name);
+                        this.currentResume = 'uploaded';
+                        
+                        this.showSuccess('Resume uploaded and displayed successfully!');
+                        this.removeSelectedFile();
+                    } else {
+                        throw new Error(result.message || 'Upload failed');
+                    }
+                    
+                } catch (error) {
+                    this.showError('Failed to upload resume. Please try again.');
+                    console.error('Upload error:', error);
+                } finally {
+                    this.uploadBtn.disabled = false;
+                    this.uploadBtn.innerHTML = '<i class="fas fa-upload"></i> Upload Resume';
+                }
+            }
+            
+            loadDefaultResumeContent() {
+                // Load the default Manu Mishra resume content
+                this.resumeContent.innerHTML = `
+                    <div class="resume-section">
+                        <h1>Manu Mishra</h1>
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <span>+91-8920429057</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>connectmanumishra@gmail.com</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fab fa-linkedin"></i>
+                                <span>linkedin.com/in/manu12mishra</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fab fa-github"></i>
+                                <span>github.com/manumishra12</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="resume-section">
+                        <h2><i class="fas fa-graduation-cap"></i> Education</h2>
+                        <h3>Vellore Institute of Technology, Chennai</h3>
+                        <p><strong>Sep. 2021 – Sep 2025</strong></p>
+                        <p>Bachelor of Technology in Computer Science | <strong>CGPA: 8.20</strong></p>
+                        <p>• Sponsorship and Management Lead at REVA, Special Team</p>
+                        <p>• Programming and Electrical Member at HumanoidX</p>
+                        <p>• Content and Technical member at VITrendZ and Webster's</p>
+                    </div>
+
+                    <div class="resume-section">
+                        <h2><i class="fas fa-briefcase"></i> Experience</h2>
+                        
+                        <h3>AI Engineer Intern - Mondee</h3>
+                        <p><strong>Present | Hyderabad - onsite</strong></p>
+                        <p>• Worked on GenAI and designing prompts for Aarna, Mondee's AI app, to generate personalized travel experiences and dynamic itineraries</p>
+                        <p>• Built multi-agent Agentic AI workflows using LangChain, LangGraph, custom ML models, APIs, and full-stack tools</p>
+
+                        <h3>Software Developer Intern - DigiQuanta</h3>
+                        <p><strong>Jan 2025 - Mar 2025 | Hyderabad - onsite</strong></p>
+                        <p>• Developed a lip-syncing pipeline for dubbed videos by aligning audio with visual frames using facial keypoint detection, computer vision, and temporal modeling</p>
+                        <p>• Built a voice-enabled medical assistant using speech recognition and GenAI APIs to provide real-time responses for preliminary diagnostics and health queries</p>
+
+                        <h3>Junior Researcher - Indian Institute of Technology, BHU</h3>
+                        <p><strong>June 2024 – July 2024 | Varanasi - onsite</strong></p>
+                        <p>• Engineered a Cuffless Blood Pressure estimation system utilizing ECG, PPG, and advanced machine learning techniques for precise and non-invasive monitoring</p>
+                        <p>• Enhanced healthcare solutions through innovative signal processing and real-time data analysis</p>
+                    </div>
+
+                    <div class="resume-section">
+                        <h2><i class="fas fa-project-diagram"></i> Projects</h2>
+                        
+                        <h3>SmartGrader</h3>
+                        <p><strong>VLM, LLM, Unsloth, Llamafactory</strong></p>
+                        <p>Built an AI grading system using fine-tuned LLMs and Qwen-VL to interpret handwritten diagrams, pseudocode and structured content. Enhanced multimodal reasoning and problem-solving by incorporating Gemma3 for instructions and analytical depth.</p>
+                        
+                        <h3>Nexus Search</h3>
+                        <p><strong>Agentic Search, LangChain, LangGraph, Tavily</strong></p>
+                        <p>Nexus Search delivers intelligent, multi-modal search and content analysis through a 13-agent architecture built with LangChain, LangGraph, and Tavily enabling professional document generation and advanced query resolution.</p>
+                        
+                        <h3>Talk2Me</h3>
+                        <p><strong>MERN, Socket.io, TailwindCSS, Daisy UI, Zustand</strong></p>
+                        <p>Developed a MERN stack real-time chat app with JWT authentication, Socket.io messaging, online status, state management, and robust error handling.</p>
+                    </div>
+
+                    <div class="resume-section">
+                        <h2><i class="fas fa-code"></i> Technical Skills</h2>
+                        <p><strong>Languages:</strong> Python, Java, C++, ReactJS, NextJS, JavaScript</p>
+                        <p><strong>Developer Tools:</strong> Cloud basics, MongoDB, SQL, NodeJS, ExpressJS, Figma, AdobeXD</p>
+                        <p><strong>Technologies:</strong> Git/GitHub, Machine Learning, Deep Learning, Generative AI, LangChain/Graph</p>
+                        <p><strong>Relevant Coursework:</strong> DSA, OOPS, System Design, Software Engineering</p>
+                    </div>
+
+                    <div class="resume-section">
+                        <h2><i class="fas fa-file-alt"></i> Publications</h2>
+                        
+                        <h3>Cuffless BP Estimation</h3>
+                        <p><strong>Deep Learning, Machine Learning, SWIN Transformers | Published</strong></p>
+                        <p>Developed cuffless blood pressure estimation system using bispectrum and bicoherence images for accurate predictions, with a SWIN Transformer model for non-invasive monitoring.</p>
+                        
+                        <h3>A System and Method for Automated Waste Segregation</h3>
+                        <p><strong>Application no: 202441064693 | Patented</strong></p>
+                        <p>An AI-powered machine that automates construction waste segregation, enhancing recycling efficiency and sustainability by diverting waste from landfills and integrating with waste management systems.</p>
+                    </div>
+
+                    <div class="resume-section">
+                        <h2><i class="fas fa-trophy"></i> Achievements</h2>
+                        <p>• Secured 15th place among 100+ teams in the Smart India Hackathon 2023 as a grand finalist</p>
+                        <p>• Won 2nd position in the Smart India Hackathon 2022 for the "Money Plant" smart bin for waste segregation</p>
+                        <p>• Got first prize in an IoT Hackathon for an automated solution for waste management</p>
+                        <p>• Received the Rookie Team Award at Hackhub 2022 for a Smart Attendance System supporting online and offline use</p>
+                    </div>
+                `;
+                
+                this.resumeContent.classList.remove('uploaded');
+                this.updateResumeStatus('default', 'Default Resume (Manu Mishra)');
+            }
+            
+            updateResumeStatus(type, description) {
+                this.resumeStatusText.textContent = `Viewing: ${description}`;
+                
+                if (type === 'uploaded') {
+                    this.resetResumeBtn.style.display = 'flex';
+                    this.resumeContent.classList.add('uploaded');
+                } else {
+                    this.resetResumeBtn.style.display = 'none';
+                    this.resumeContent.classList.remove('uploaded');
+                }
+            }
+            
+            formatUploadedResumeContent(content, filename) {
+                // Clean and prepare content
+                const cleanedContent = this.cleanResumeContent(content);
+                const lines = cleanedContent.split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line.length > 0);
+                
+                if (lines.length === 0) {
+                    return this.createFallbackResumeDisplay(content, filename);
+                }
+                
+                let formattedContent = `
+                    <div class="resume-uploaded-badge">
+                        <i class="fas fa-upload"></i> 
+                        ${filename}
+                    </div>
+                `;
+                
+                let html = '';
+                let processedLines = new Set();
+                let sections = this.identifyResumeSections(lines);
+                
+                // Add name and contact section if identified
+                if (sections.name) {
+                    html += `<div class="resume-section"><h1>${sections.name}</h1>`;
+                    processedLines.add(sections.name);
+                    
+                    if (sections.contacts.length > 0) {
+                        html += '<div class="contact-info">';
+                        sections.contacts.forEach(contact => {
+                            const icon = this.getContactIcon(contact);
+                            html += `<div class="contact-item"><i class="${icon}"></i><span>${contact}</span></div>`;
+                            processedLines.add(contact);
+                        });
+                        html += '</div>';
+                    }
+                    html += '</div>';
+                }
+                
+                // Process remaining content by sections
+                let currentSection = '';
+                let sectionContent = [];
+                
+                for (const line of lines) {
+                    if (processedLines.has(line)) continue;
+                    
+                    if (this.isSectionHeader(line)) {
+                        // Close previous section if exists
+                        if (currentSection && sectionContent.length > 0) {
+                            html += this.formatSectionContent(currentSection, sectionContent);
+                            sectionContent = [];
+                        }
+                        
+                        currentSection = line;
+                        continue;
+                    }
+                    
+                    if (currentSection) {
+                        sectionContent.push(line);
+                    } else {
+                        // Content without section - create a general section
+                        if (!currentSection) {
+                            currentSection = 'Professional Summary';
+                        }
+                        sectionContent.push(line);
+                    }
+                }
+                
+                // Close final section
+                if (currentSection && sectionContent.length > 0) {
+                    html += this.formatSectionContent(currentSection, sectionContent);
+                }
+                
+                // If no structured content was found, use fallback
+                if (!html.trim()) {
+                    return this.createFallbackResumeDisplay(content, filename);
+                }
+                
+                return formattedContent + html;
+            }
+            
+            cleanResumeContent(content) {
+                // Remove excessive whitespace and clean up common PDF extraction artifacts
+                return content
+                    .replace(/\r\n/g, '\n')  // Normalize line endings
+                    .replace(/\n{3,}/g, '\n\n')  // Remove excessive line breaks
+                    .replace(/\s{3,}/g, ' ')  // Remove excessive spaces
+                    .replace(/[^\x20-\x7E\n]/g, '')  // Remove non-printable characters except newlines
+                    .replace(/(\w)-\s*\n\s*(\w)/g, '$1$2')  // Fix hyphenated words split across lines
+                    .trim();
+            }
+            
+            identifyResumeSections(lines) {
+                let name = '';
+                let contacts = [];
+                
+                // Look for name in first 5 lines
+                for (let i = 0; i < Math.min(5, lines.length); i++) {
+                    const line = lines[i];
+                    
+                    if (!name && this.isLikelyName(line)) {
+                        name = line;
+                        continue;
+                    }
+                    
+                    if (this.isContactInfo(line)) {
+                        contacts.push(line);
+                    }
+                }
+                
+                // If no name found, use first non-contact line
+                if (!name && lines.length > 0) {
+                    for (const line of lines.slice(0, 3)) {
+                        if (!this.isContactInfo(line) && line.length > 3 && line.length < 50) {
+                            name = line;
+                            break;
+                        }
+                    }
+                }
+                
+                return { name, contacts };
+            }
+            
+            isLikelyName(line) {
+                return line.length > 2 && 
+                       line.length < 50 && 
+                       /^[A-Z][a-zA-Z\s\.]+$/.test(line) && 
+                       !line.includes('@') && 
+                       !line.includes('http') &&
+                       !line.includes('linkedin') &&
+                       !line.includes('github') &&
+                       !this.isDateRange(line);
+            }
+            
+            isContactInfo(line) {
+                return line.match(/^[\+\d\s\-\(\)]{10,}$/) || // Phone
+                       line.includes('@') || // Email
+                       line.toLowerCase().includes('linkedin') ||
+                       line.toLowerCase().includes('github') ||
+                       line.toLowerCase().includes('portfolio') ||
+                       line.toLowerCase().includes('website') ||
+                       line.toLowerCase().includes('http');
+            }
+            
+            getContactIcon(contact) {
+                if (contact.match(/^[\+\d\s\-\(\)]{10,}$/)) return 'fas fa-phone';
+                if (contact.includes('@')) return 'fas fa-envelope';
+                if (contact.toLowerCase().includes('linkedin')) return 'fab fa-linkedin';
+                if (contact.toLowerCase().includes('github')) return 'fab fa-github';
+                if (contact.toLowerCase().includes('portfolio') || contact.toLowerCase().includes('website')) return 'fas fa-globe';
+                if (contact.toLowerCase().includes('http')) return 'fas fa-link';
+                return 'fas fa-info';
+            }
+            
+            formatSectionContent(sectionName, content) {
+                const icon = this.getSectionIcon(sectionName);
+                let html = `<div class="resume-section"><h2><i class="${icon}"></i> ${sectionName}</h2>`;
+                
+                let currentSubsection = '';
+                let inList = false;
+                
+                for (const line of content) {
+                    if (this.isJobTitleOrCompany(line)) {
+                        if (inList) {
+                            inList = false;
+                        }
+                        html += `<h3>${line}</h3>`;
+                    } else if (this.isDateRange(line)) {
+                        html += `<p><strong>${line}</strong></p>`;
+                    } else if (this.isSkillsList(line)) {
+                        html += `<p><strong>${line}</strong></p>`;
+                    } else if (line.startsWith('•') || line.startsWith('-') || line.startsWith('*') || line.startsWith('→')) {
+                        // Handle bullet points
+                        const cleanLine = line.replace(/^[•\-*→]\s*/, '');
+                        html += `<p>• ${cleanLine}</p>`;
+                    } else if (line.includes(':') && !line.includes('@') && !line.includes('http')) {
+                        // Likely a category or skill group
+                        html += `<p><strong>${line}</strong></p>`;
+                    } else if (line.length > 0) {
+                        html += `<p>${line}</p>`;
+                    }
+                }
+                
+                html += '</div>';
+                return html;
+            }
+            
+            createFallbackResumeDisplay(content, filename) {
+                // Fallback formatting for difficult-to-parse resumes
+                const cleanedContent = this.cleanResumeContent(content);
+                const paragraphs = cleanedContent.split('\n\n')
+                    .map(p => p.replace(/\n/g, ' ').trim())
+                    .filter(p => p.length > 0);
+                
+                let html = `
+                    <div class="resume-uploaded-badge">
+                        <i class="fas fa-upload"></i> 
+                        ${filename}
+                    </div>
+                    <div class="resume-section">
+                        <h2><i class="fas fa-file-alt"></i> Resume Content</h2>
+                        <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                            <p style="margin: 0 0 0.5rem 0; font-size: 0.875rem; color: #6b7280;">
+                                <i class="fas fa-info-circle"></i> 
+                                This resume has been displayed in a simplified format. All content is preserved.
+                            </p>
+                        </div>
+                `;
+                
+                if (paragraphs.length > 0) {
+                    paragraphs.forEach((paragraph, index) => {
+                        // Try to identify if this might be a name (first paragraph, short, proper case)
+                        if (index === 0 && paragraph.length < 50 && /^[A-Z][a-zA-Z\s\.]+$/.test(paragraph.split(' ')[0])) {
+                            html += `<h3 style="color: #1e293b; font-size: 1.25rem; margin: 1rem 0 0.5rem 0;">${paragraph}</h3>`;
+                        } else {
+                            html += `<p style="margin-bottom: 0.75rem; line-height: 1.6;">${paragraph}</p>`;
+                        }
+                    });
+                } else {
+                    // Last resort - just display the raw content with basic formatting
+                    const lines = content.split('\n').filter(line => line.trim());
+                    lines.forEach(line => {
+                        if (line.trim()) {
+                            html += `<p style="margin-bottom: 0.5rem;">${line.trim()}</p>`;
+                        }
+                    });
+                }
+                
+                html += '</div>';
+                return html;
+            }
+            
+            isSectionHeader(line) {
+                const sectionKeywords = [
+                    // English
+                    'education', 'experience', 'work experience', 'employment', 'career', 'professional experience',
+                    'skills', 'technical skills', 'core competencies', 'expertise', 'technologies', 'tools',
+                    'projects', 'key projects', 'notable projects', 'personal projects', 'side projects',
+                    'certifications', 'certificates', 'awards', 'honors', 'recognition',
+                    'achievements', 'accomplishments', 'highlights',
+                    'publications', 'research', 'papers', 'articles',
+                    'volunteer', 'volunteering', 'community service', 'community involvement',
+                    'languages', 'interests', 'hobbies', 'personal interests',
+                    'summary', 'profile', 'objective', 'about', 'about me', 'overview',
+                    'contact', 'contact information', 'personal information',
+                    'references', 'recommendations', 'testimonials',
+                    // Common variations
+                    'work history', 'employment history', 'job experience', 'professional history',
+                    'technical expertise', 'core skills', 'skill set', 'competencies',
+                    'project work', 'project experience', 'portfolio',
+                    'academic background', 'educational background', 'qualifications'
+                ];
+                
+                const lowerLine = line.toLowerCase().trim();
+                
+                // Direct match
+                if (sectionKeywords.includes(lowerLine)) return true;
+                
+                // Partial match for longer section names
+                const isLikelySection = sectionKeywords.some(keyword => {
+                    return lowerLine.includes(keyword) && 
+                           line.length < 50 && 
+                           line.split(' ').length <= 4;
+                });
+                
+                // Check for section patterns (all caps, title case with colons, etc.)
+                const hasPatterns = /^[A-Z\s]+:?$/.test(line) || // ALL CAPS
+                                  /^[A-Z][a-z\s]+:$/.test(line) || // Title Case:
+                                  (line.length < 30 && /^[A-Z]/.test(line) && line.split(' ').every(word => 
+                                      word.charAt(0) === word.charAt(0).toUpperCase())); // Title Case
+                
+                return isLikelySection || (hasPatterns && line.split(' ').length <= 3);
+            }
+            
+            getSectionIcon(sectionName) {
+                const lowerSection = sectionName.toLowerCase();
+                
+                if (lowerSection.includes('education')) return 'fas fa-graduation-cap';
+                if (lowerSection.includes('experience') || lowerSection.includes('work') || lowerSection.includes('employment')) return 'fas fa-briefcase';
+                if (lowerSection.includes('skill') || lowerSection.includes('competenc') || lowerSection.includes('expertise')) return 'fas fa-code';
+                if (lowerSection.includes('project')) return 'fas fa-project-diagram';
+                if (lowerSection.includes('certif') || lowerSection.includes('award') || lowerSection.includes('honor')) return 'fas fa-certificate';
+                if (lowerSection.includes('achievement') || lowerSection.includes('accomplish')) return 'fas fa-trophy';
+                if (lowerSection.includes('publication') || lowerSection.includes('research')) return 'fas fa-file-alt';
+                if (lowerSection.includes('volunteer') || lowerSection.includes('community')) return 'fas fa-hands-helping';
+                if (lowerSection.includes('language')) return 'fas fa-language';
+                if (lowerSection.includes('interest') || lowerSection.includes('hobby')) return 'fas fa-heart';
+                if (lowerSection.includes('summary') || lowerSection.includes('profile') || lowerSection.includes('about')) return 'fas fa-user';
+                
+                return 'fas fa-list';
+            }
+            
+            isJobTitleOrCompany(line) {
+                // Check for patterns that suggest job titles or company names
+                const jobPatterns = [
+                    /^[A-Z][a-zA-Z\s]+ - [A-Z][a-zA-Z\s]+$/, // "Job Title - Company"
+                    /^[A-Z][a-zA-Z\s]+ at [A-Z][a-zA-Z\s]+$/, // "Job Title at Company"
+                    /^[A-Z][a-zA-Z\s]+, [A-Z][a-zA-Z\s]+$/, // "Job Title, Company"
+                ];
+                
+                return jobPatterns.some(pattern => pattern.test(line)) ||
+                       (line.length > 10 && line.length < 80 && 
+                        /^[A-Z]/.test(line) && 
+                        !line.includes('•') && 
+                        !line.includes('http') &&
+                        !this.isDateRange(line));
+            }
+            
+            isDateRange(line) {
+                // Check for date patterns
+                const datePatterns = [
+                    /\d{4}\s*[-–—]\s*\d{4}/, // 2020-2024
+                    /\d{4}\s*[-–—]\s*present/i, // 2020-Present
+                    /[A-Za-z]{3,9}\s+\d{4}\s*[-–—]\s*[A-Za-z]{3,9}\s+\d{4}/, // Jan 2020 - Dec 2024
+                    /[A-Za-z]{3,9}\s+\d{4}\s*[-–—]\s*present/i, // Jan 2020 - Present
+                ];
+                
+                return datePatterns.some(pattern => pattern.test(line));
+            }
+            
+            isSkillsList(line) {
+                // Check if line contains skills (usually has colons and commas)
+                return line.includes(':') && line.includes(',') && 
+                       (line.toLowerCase().includes('language') ||
+                        line.toLowerCase().includes('skill') ||
+                        line.toLowerCase().includes('technolog') ||
+                        line.toLowerCase().includes('tool') ||
+                        line.toLowerCase().includes('framework') ||
+                        line.toLowerCase().includes('software'));
+            }
+            
+            updateResumeContent(content, filename) {
+                // Format and display the uploaded resume content
+                const formattedContent = this.formatUploadedResumeContent(content, filename);
+                this.resumeContent.innerHTML = formattedContent;
+                
+                this.updateResumeStatus('uploaded', filename);
+                
+                // Update the current resume indicator in upload section
+                const currentResumeDiv = document.getElementById('currentResumeStatus');
+                if (currentResumeDiv) {
+                    currentResumeDiv.innerHTML = `
+                        <i class="fas fa-check-circle"></i>
+                        <span>Currently using: ${filename}</span>
+                    `;
+                }
+            }
+            
+            async resetToDefaultResume() {
+                try {
+                    const response = await fetch('/api/resume/reset', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Reset failed');
+                    }
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // Reset to default content
+                        this.loadDefaultResumeContent();
+                        this.currentResume = 'default';
+                        
+                        // Update current resume indicator in upload section
+                        const currentResumeDiv = document.getElementById('currentResumeStatus');
+                        if (currentResumeDiv) {
+                            currentResumeDiv.innerHTML = `
+                                <i class="fas fa-check-circle"></i>
+                                <span>Currently using: Manu Mishra's Resume (Default)</span>
+                            `;
+                        }
+                        
+                        this.showSuccess('Reset to default resume successfully!');
+                    } else {
+                        throw new Error(result.message || 'Reset failed');
+                    }
+                    
+                } catch (error) {
+                    this.showError('Failed to reset resume. Please try again.');
+                    console.error('Reset error:', error);
+                }
+            }
+            
+            async loadResumeContent() {
+                // Initialize with default resume content
+                this.loadDefaultResumeContent();
+                console.log('Resume content initialized');
+            }
+            
+            showSuccess(message) {
+                const successDiv = document.createElement('div');
+                successDiv.className = 'status-message';
+                successDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+                this.chatArea.appendChild(successDiv);
+                this.chatArea.scrollTop = this.chatArea.scrollHeight;
+                
+                // Remove after 3 seconds
+                setTimeout(() => successDiv.remove(), 3000);
+            }
+        }
+        
+        // Initialize the voice assistant when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new VoiceAssistant();
+        });
+    </script>
+</body>
+</html>
