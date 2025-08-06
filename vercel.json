@@ -1,18 +1,19 @@
 {
   "version": 2,
-  "functions": {
-    "app/*.py": {
-      "runtime": "python3.9"
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
     }
-  },
+  ],
   "routes": [
     {
       "src": "/",
       "dest": "/index.html"
     },
     {
-      "src": "/app/(.*)",
-      "dest": "/app/$1"
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
